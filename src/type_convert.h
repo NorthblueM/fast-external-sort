@@ -1,14 +1,14 @@
 #pragma once
-#ifndef TYPE_H_
-#define TYPE_H_
+#ifndef TYPE_CONVERT_H_
+#define TYPE_CONVERT_H_
 
 //#ifdef DIVIDE_SORT
 static double dpow[310], lpow[310];
 static int pw[5];
 //#endif
 
-#ifdef TYPE_INIT
-int TypeInit() {
+#ifdef TYPE_CONVERT_INIT
+int TypeConvertInit() {
 	dpow[0] = 1.0;
 	int i = 1;
 	for (i = 1; i < 309; ++i) dpow[i] = dpow[i - 1] * 0.1;

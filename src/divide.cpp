@@ -1,7 +1,7 @@
 #define DIVIDE_SORT
 
 #include "divide.h"
-#include "type.h"
+#include "type_convert.h"
 
 typedef long long LL;
 const LL MAX_INT64D = 0x7FF0000000000000 - 1;
@@ -68,7 +68,7 @@ int DivideSort::CharToDouble() {
 
 	int i = 0, j = 0;
 	int strlen, e_pos = -1, dot_pos = -1;;
-	char* str = (char*)malloc(max_len_float * sizeof(char));
+	char* str = (char*)malloc(param_.max_len_float_ * sizeof(char));
 	char tmp;//record +/- after e/E
 	for (i = 0; i < num_in_char_; i++) {
 
@@ -273,8 +273,7 @@ int ReadFile(FILE* fin, char* chars) {
 	return read_size;
 }
 
-int WriteFile(const char* fileName, double* sort_double, const int sort_num)
-{
+int WriteFile(const char* fileName, double* sort_double, const int sort_num) {
 	FILE* fpo = fopen(fileName, "wb");
 	double MAX_DOUBLE = *(double*)(&MAX_INT64D);
 	sort_double[sort_num] = MAX_DOUBLE;//One more maximum at the end

@@ -2,9 +2,16 @@
 #ifndef MERGE_H_
 #define MERGE_H_
 
-class Merge
-{
 
+class MergeSort{
+public:
+	MergeSort() {};
+	~MergeSort() {};
+
+	bool Merge(const int*);
+
+private:
+	
 
 };
 
