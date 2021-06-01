@@ -105,12 +105,59 @@ double FastCToF(char* c, int ep, int dotp) {
 
 
 #ifdef MERGE_SORT
+//add 5 to the significant digit
+double Round(double t, int n) {
+	if (t == 0) return t;
+
+	//Absolute
+	LL t_ll = *(LL*)(&t);
+	if (t < 0) t_ll &= (0x7FFFFFFFFFFFFFFF);
+	double t_abs = *(double*)(&t_ll);
+
+	int l = 0, r = 308, mid;
+	double tmp = 0.00;
+	if (t_abs >= 1.00) {
+		while (l <= r) { //binary search for decimal exponent
+			mid = (l + r) >> 1;
+			tmp = t_abs / lpow[mid];
+			if (tmp >= 10.00) l = mid + 1;
+			else if (tmp < 1.00) r = mid - 1;
+			else break;
+		}//mid is exponent
+		if (mid <= n) {
+			if (t > 0) t += 5 * dpow[n - mid];
+			else t -= 5 * dpow[n - mid];
+		}
+		else {
+			if (t > 0) t += 5 * lpow[mid - n];
+			else t -= 5 * lpow[mid - n];
+		}
+	}
+	else {
+		while (l <= r) {
+			mid = (l + r) >> 1;
+			tmp = t_abs * lpow[mid];
+			if (tmp >= 10.00) r = mid - 1;
+			else if (tmp < 1.00) l = mid + 1;
+			else break;
+		}//-mid is exponent
+		if (mid <= 308 - n) {
+			if (t > 0) t += 5 * dpow[n + mid];
+			else t -= 5 * dpow[n + mid];
+		}
+		else {
+			if (t > 0) t += 5 * dpow[308] * dpow[n + mid - 308];
+			else t -= 5 * dpow[308] * dpow[n + mid - 308];
+		}
+	}
+	return t;
+}
+
 char* FastFToC(char* buf, double number) {
 	int i = 0, num = 0, l = 0, r = 308, mid, ln;
 	double tmp = 0.00;
 
-	if (number == -5*dpow[308]*dpow[10]) { //number == 0.0;
-		//if (number < 0) (*buf++) = '-';
+	if (number == 0.0) { //number == 0.0;
 		*(buf++) = '0';
 		*(buf++) = '.';
 		for (i = 0; i < 9; ++i) *(buf++) = '0';
@@ -220,51 +267,5 @@ char* FastFToC(char* buf, double number) {
 	}
 	return buf;
 
-}
-
-//add 5 to the significant digit
-double Round(double t, int n) {
-	//Absolute
-	LL t_ll = *(LL*)(&t);
-	if (t < 0) t_ll &= (0x7FFFFFFFFFFFFFFF);
-	double t_abs = *(double*)(&t_ll);
-
-	int l = 0, r = 308, mid;
-	double tmp = 0.00;
-	if (t_abs >= 1.00) {
-		while (l <= r) { //binary search for decimal exponent
-			mid = (l + r) >> 1;
-			tmp = t_abs / lpow[mid];
-			if (tmp >= 10.00) l = mid + 1;
-			else if (tmp < 1.00) r = mid - 1;
-			else break;
-		}//mid is exponent
-		if (mid <= n) {
-			if (t > 0) t += 5 * dpow[n - mid];
-			else t -= 5 * dpow[n - mid];
-		}
-		else {
-			if (t > 0) t += 5 * lpow[mid - n];
-			else t -= 5 * lpow[mid - n];
-		}
-	}
-	else {
-		while (l <= r) {
-			mid = (l + r) >> 1;
-			tmp = t_abs * lpow[mid];
-			if (tmp >= 10.00) r = mid - 1;
-			else if (tmp < 1.00) l = mid + 1;
-			else break;
-		}//-mid is exponent
-		if (mid <= 308 - n) {
-			if (t > 0) t += 5 * dpow[n + mid];
-			else t -= 5 * dpow[n + mid];
-		}
-		else {
-			if (t > 0) t += 5 * dpow[308] * dpow[n + mid - 308];
-			else t -= 5 * dpow[308] * dpow[n + mid - 308];
-		}
-	}
-	return t;
 }
 #endif
