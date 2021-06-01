@@ -6,7 +6,7 @@ int Param::Print(const char* fmt) {
 	return 0;
 }
 
-bool IsFileExist(const std::string fpath) {
+bool IsFileExist(const std::string& fpath) {
 	std::ifstream file(fpath.c_str());
 	if (!file) {
 		file.close();
@@ -38,6 +38,8 @@ bool ParseParam(const std::string& fpath) {
 		else if (key == "num_sort_once") param.num_sort_once_ = stoi(value);
 		else if (key == "num_read_double") param.num_read_double_ = stoi(value);
 		else if (key == "num_write_char") param.num_write_char_ = stoi(value);
+		else if (key == "max_len_float") param.max_len_float_ = stoi(value);
+		else if (key == "max_len_tmpname") param.max_len_tmpname_ = stoi(value);
 	}
 	file_param.close();
 	return true;

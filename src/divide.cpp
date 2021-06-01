@@ -1,7 +1,7 @@
 #define DIVIDE_SORT
 
 #include "divide.h"
-#include "type_convert.h"
+#include "convert.h"
 
 typedef long long LL;
 const LL MAX_INT64D = 0x7FF0000000000000 - 1;
@@ -31,7 +31,7 @@ bool DivideSort::Sort() {
 	FILE* fin = fopen(param_.fpath_input_.c_str(), "rb");
 	int read_offset = 0, i = 0;
 
-	printf("%d small file read char: ", tmp_count_);
+	printf("%d temp read & convert char: ", tmp_count_);
 	while (!feof(fin)){
 		num_in_sort_ = 0;
 		while (num_in_sort_ < (param_.num_sort_once_) && !feof(fin)) {
@@ -56,11 +56,13 @@ bool DivideSort::Sort() {
 		InternalSort();
 	}
 
+	putchar('\r'); //Print for Screen
+
 	free(unsort_double_);
 	free(unsort_char_);
+	free(tmp_filename_);
 	fclose(fin);
-
-	putchar('\r'); //Print for Screen
+	
 	return true;
 }
 
@@ -159,17 +161,18 @@ int DivideSort::SkipIllegal(char* str, int strl, int i_char) {
 }
 
 int DivideSort::InternalSort() {
-	tmp_num_sort_[tmp_count_] = num_in_sort_;
-	printf("\ninternal num: %d, now sorted: %d, ", num_in_sort_, sum_sort_);
+	tmp_num_sort_.push_back(num_in_sort_);
+	printf("\ninternal: %d, ", num_in_sort_);
 	
 	RadixSort();
-	printf("sort OK! ");
+	printf("sort ok, ");
 	
 	WriteFile(GetTmpFileName(), unsort_double_, num_in_sort_);
-	printf("write %s\n", GetTmpFileName());
+	printf("write %s, ", GetTmpFileName());
+	printf("sorted: %d\n", sum_sort_);
 
 	tmp_count_++;
-	printf("%d small file read char: ", tmp_count_);
+	printf("%d temp read & convert char: ", tmp_count_);
 	return 0;
 }
 
